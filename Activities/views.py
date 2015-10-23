@@ -55,7 +55,7 @@ def viewMap(request):
     city_name = request.POST.get('city_name')
     test = request.POST.getlist('activityChoice')
     startingPoint = request.POST.get('startingPoint')
-    print "Starting Point: {0}".format(startingPoint)
+#    print "Starting Point: {0}".format(startingPoint)
     request.session['startingPoint'] = startingPoint
     l=0
     selectedList = []
@@ -65,7 +65,7 @@ def viewMap(request):
         if i['name'] in test or i['name'] == startingPoint:
             selectedList.append(i)
             
-    print "Length of selectedList: {0}".format(len(selectedList))
+#    print "Length of selectedList: {0}".format(len(selectedList))
     context['selectedList'] = selectedList
     request.session['selectedList'] = selectedList
     #This query should be moved back to maps to retain any service-based query integrity to individual services
@@ -80,6 +80,7 @@ def viewMap(request):
 def viewCity(request, city, activity):
     request.session['activity'] = activity
     cityResults = query_api(activity, city)
+    print "cityResults: {0}".format(cityResults)
     context = {"viewCity": cityResults, 'city': city}
     request.session['cityResults'] = cityResults
 
@@ -88,7 +89,9 @@ def viewCity(request, city, activity):
 def queryCity(request, city):
     if request.method == "POST":
         form = CityForm(request.POST)
+#        print "CityForm: {0}".format(form)
         city_name = request.POST['city'].strip("/")
+#        print "city_name: {0}".format(city_name)
         activity = request.POST['activity']
         if form.is_valid():
             return HttpResponseRedirect(city_name+"/view/"+activity)
