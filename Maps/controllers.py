@@ -7,22 +7,69 @@ import sys
 import copy
 import json
 import time
+from api import *
 
 from urllib2 import *
 
+
+def getFirstStep(startingPoint=None, destinationList=None, request=None):
+    startHere = {}
+    for i in request.session['destinationList']:
+       # print i
+        if startingPoint == i['firstName']:
+#            print i
+            if not startHere:
+                startHere['startName'] = i['firstName']
+                startHere['startValue'] = i['distance']['value']
+                startHere['finishName'] = i['secondName']
+            else:
+                if i['distance']['value'] <= startHere['startValue']:
+                    startHere['startName'] = i['firstName']  
+                    startHere['startValue'] = i['distance']['value']
+                    startHere['finishName'] = i['secondName']
+    #print "startHere: {0}".format(startHere)
+    return startHere
+    
+    
 def defineShortestPath(startingPoint=None, destinationList=None, request=None):
-    for i in request.session.keys():
-        print request.session[i]
+    print "startingPoint: {0}".format(startingPoint)
+    firstStep=getFirstStep(startingPoint, destinationList, request)
+    print "firstStep: {0}".format(firstStep)
+    theList=[]
+    theList.append(firstStep)
+    counter=0
+    print "Second first step: {0}".format(getFirstStep(firstStep['finishName'], destinationList, request))
+    
+#    for entry in theList:
+#        print entry
+"""    
+    for destination in destinationList:
+
+        theList.append(getDestination(startingPoint, destinationList, request))
+        counter +=1
+        
+    for entry in theList:
+        print entry
+"""        
+        
+    
+    
+    
+    
+#    for i in request.session.keys():
+#        print request.session[i]
+#        print request.session['destinationList']
+#        print "\n"
 #    print "startingPoint: {0}".format(startingPoint)
     #print "destinationList: {0}".format(destinationList)
     #print "Length of destinationList: {0}".format(len(destinationList))
-    counter=0
-    distanceFromPointList=[]
-    for line in destinationList:
-#        print line
-        if line['firstName'] == startingPoint or line['secondName'] == startingPoint:
-            counter +=1
-            distanceFromPointList.append(line['distance']['value'])
+#     counter=0
+#     distanceFromPointList=[]
+#     for line in destinationList:
+# #        print line
+#         if line['firstName'] == startingPoint or line['secondName'] == startingPoint:
+#             counter +=1
+#             distanceFromPointList.append(line['distance']['value'])
 #    print min(distanceFromPointList)
 #    print "Length of counter: {0}".format(counter)
     
@@ -49,7 +96,13 @@ def setDestinations(destlist, request):
         destlist.insert(counter,{'city':city, 'street':street, 'state':state, 'name': selectedList[counter]['name']})
         counter+=1
     dunno=(getDistances(destlist, distanceList))
-    return dunno
+    print "dunno: {0}".format(dunno)
+    counter=0
+    for entry in dunno:
+        print "counter:\t{0}".format(counter)
+        print "getDistance return value:\t{0}".format(getDistance(dunno,counter))
+        counter+=1
+#    return dunno
 
 def getDistances(destlist, distanceList):
 
@@ -97,7 +150,6 @@ def getDistances(destlist, distanceList):
         del destlist[0]
         return getDistances(destlist, distanceList)
     else:
-
         return distanceList
 
 

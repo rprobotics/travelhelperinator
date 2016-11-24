@@ -6,7 +6,10 @@ import urllib2
 import json
 
 
-def index(request):
+
+def views(request):
+    return "hello world"
+#def index(request):
 
 """
 street="100+osage+drive"

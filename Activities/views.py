@@ -76,11 +76,11 @@ def viewMap(request):
     return HttpResponseRedirect("/")
  
  
- 
+ # refactor cityResults to cityActivities; it more accurately describes the results
 def viewCity(request, city, activity):
     request.session['activity'] = activity
     cityResults = query_api(activity, city)
-    print "cityResults: {0}".format(cityResults)
+    #print "cityResults: {0}".format(cityResults)
     context = {"viewCity": cityResults, 'city': city}
     request.session['cityResults'] = cityResults
 
